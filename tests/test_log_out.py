@@ -1,42 +1,41 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import pytest
+from constants.locators import TestLocators
+from constants.constants import TestUrlConstants
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-from selenium.common.exceptions import TimeoutException
 
-driver = webdriver.Chrome()
-driver.maximize_window()
 
-driver.get('https://stellarburgers.nomoreparties.site/')
+class TestLogOut:
 
-driver.find_element(By.XPATH, "/html/body/div/div/main/section[2]/div/button").click()
+    @pytest.mark.usefixtures('driver')
+    def test_log_out(self, driver):
+        driver.get(TestUrlConstants.MAIN_PAGE_URL)
 
-email_path = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div/input')
-password_path = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div/input')
+        driver.find_element(*TestLocators.LOG_IN_ACCOUNT_LOC).click()
 
-email_path.clear()
-password_path.clear()
+        WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.LOG_IN_PAGE_URL))
 
-email_path.send_keys('peleeva5@gmail.com')
-password_path.send_keys('pew123!')
+        email = driver.find_element(*TestLocators.EMAIL_INPUT_LOC)
+        password = driver.find_element(*TestLocators.PASSWORD_INPUT_LOC)
 
-log_in = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/button')
-log_in.click()
+        email.click()
+        email.clear()
+        email.send_keys('peleeva5@gmail.com')
 
-my_account = driver.find_element(By.LINK_TEXT, "Личный Кабинет")
-my_account.click()
+        password.click()
+        password.clear()
+        password.send_keys('pew123!')
 
-WebDriverWait(driver, 5).until(
-        expected_conditions.url_contains('https://stellarburgers.nomoreparties.site/account/profile'))
+        driver.find_element(*TestLocators.LOG_IN_LOC).click()
+        driver.find_element(*TestLocators.PERSONAL_ACCOUNT_LOC).click()
 
-exit_button = driver.find_element(By.XPATH, "/html/body/div/div/main/div/nav/ul/li[3]/button")
-exit_button.click()
+        WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.PROFILE_PAGE_URL))
 
-try:
-    WebDriverWait(driver, 5).until(
-        expected_conditions.url_contains('https://stellarburgers.nomoreparties.site/login'))
-    print('Выход выполнен успешно')
-except TimeoutException:
-    print('Выход не выполнен успешно')
+        driver.find_element(*TestLocators.LOG_OUT_LOC).click()
 
-driver.quit()
+        assert WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.LOG_IN_PAGE_URL))
+
+
+
+
+

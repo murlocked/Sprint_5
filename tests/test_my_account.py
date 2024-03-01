@@ -1,35 +1,37 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import pytest
+from constants.locators import TestLocators
+from constants.constants import TestUrlConstants
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-from selenium.common.exceptions import TimeoutException
 
-driver = webdriver.Chrome()
-driver.maximize_window()
 
-driver.get('https://stellarburgers.nomoreparties.site/')
+class TestPersonalAccount:
 
-driver.find_element(By.XPATH, "/html/body/div/div/main/section[2]/div/button").click()
+    @pytest.mark.usefixtures('driver')
+    def test_main_page_to_personal_account(self, driver):
 
-email_path = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div/input')
-password_path = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div/input')
+        driver.get(TestUrlConstants.MAIN_PAGE_URL)
 
-email_path.clear()
-password_path.clear()
+        driver.find_element(*TestLocators.LOG_IN_ACCOUNT_LOC).click()
 
-email_path.send_keys('peleeva5@gmail.com')
-password_path.send_keys('pew123!')
+        WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.LOG_IN_PAGE_URL))
 
-log_in = driver.find_element(By.XPATH, '/html/body/div/div/main/div/form/button')
-log_in.click()
+        email = driver.find_element(*TestLocators.EMAIL_INPUT_LOC)
+        password = driver.find_element(*TestLocators.PASSWORD_INPUT_LOC)
 
-driver.find_element(By.LINK_TEXT, "Личный Кабинет").click()
+        email.click()
+        email.clear()
+        email.send_keys('peleeva5@gmail.com')
 
-try:
-    WebDriverWait(driver, 5).until(
-        expected_conditions.url_changes('https://stellarburgers.nomoreparties.site/account/profile'))
-    print('Переход в ЛК выполнен успешно')
-except TimeoutException:
-    print('Переход в ЛК не выполнен успешно')
+        password.click()
+        password.clear()
+        password.send_keys('pew123!')
 
-driver.quit()
+        driver.find_element(*TestLocators.LOG_IN_LOC).click()
+        driver.find_element(*TestLocators.PERSONAL_ACCOUNT_LOC).click()
+
+        assert WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.PROFILE_PAGE_URL))
+
+
+
+
