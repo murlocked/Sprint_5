@@ -18,9 +18,12 @@ class TestLocators:
     PASTRY_LOC = By.XPATH, '//*[contains(@class, "text_type_main-default") and text()="Булки"]'
     SOUCES_LOC = By.XPATH, '//*[contains(@class, "text_type_main-default") and text()="Соусы"]'
     FILLINGS_LOC = By.XPATH, '//*[contains(@class, "text_type_main-default") and text()="Начинки"]'
+    CURRENT_TAB_LOC = By.XPATH, '//*[contains(@class, "tab_tab_type_current")]'
 
-    EMAIL_INPUT_LOC = By.XPATH, '//*[contains(@class, "input__placeholder text noselect text_type_main-default") and text()="Email"]/following-sibling::*[1]'
-    PASSWORD_INPUT_LOC = By.XPATH, '//*[contains(@class, "input__placeholder text noselect text_type_main-default") and text()="Пароль"]/following-sibling::*[1]'
-    NAME_INPUT_LOC = By.XPATH, '//*[contains(@class, "input__placeholder text noselect text_type_main-default") and text()="Имя"]/following-sibling::*[1]'
+    CREATE_A_BURGER_LOC = (By.XPATH, './/h1[text()="Соберите бургер"]')
+
+    EMAIL_INPUT_LOC = By.XPATH, '//*[text()="Email"]/following-sibling::input'
+    PASSWORD_INPUT_LOC = By.XPATH, '//*[text()="Пароль"]/following-sibling::input'
+    NAME_INPUT_LOC = By.XPATH, '//*[text()="Имя"]/following-sibling::input'
 
     INCORRECT_PASSWORD_MSG_LOC = By.XPATH, '//*[contains(text(), "Некорректный пароль")]'

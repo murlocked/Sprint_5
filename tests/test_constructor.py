@@ -32,7 +32,7 @@ class TestConstructor:
 
         driver.find_element(*TestLocators.CONSTRUCTOR_LOC).click()
 
-        assert WebDriverWait(driver, 5).until(expected_conditions.url_matches(TestUrlConstants.MAIN_PAGE_URL))
+        assert 'Соберите бургер' in driver.find_element(*TestLocators.CREATE_A_BURGER_LOC).text
 
     @pytest.mark.usefixtures('driver')
     def test_constructor_categories(self, driver):
@@ -45,15 +45,12 @@ class TestConstructor:
 
         souces.click()
 
-        assert WebDriverWait(driver, 5).until(
-                    expected_conditions.visibility_of_element_located(TestLocators.SOUCES_LOC))
+        assert 'Соусы' in driver.find_element(*TestLocators.CURRENT_TAB_LOC).text
 
         fillings.click()
 
-        assert WebDriverWait(driver, 5).until(
-            expected_conditions.visibility_of_element_located(TestLocators.FILLINGS_LOC))
+        assert 'Начинки' in driver.find_element(*TestLocators.CURRENT_TAB_LOC).text
 
         pastry.click()
 
-        assert WebDriverWait(driver, 5).until(
-            expected_conditions.visibility_of_element_located(TestLocators.PASTRY_LOC))
+        assert 'Булки' in driver.find_element(*TestLocators.CURRENT_TAB_LOC).text
